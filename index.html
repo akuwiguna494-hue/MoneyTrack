@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MoneyTrack</title>
+<meta name="theme-color" content="#0f9d76">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MoneyTrack">
+<style>
+:root{--base:#e9f1fb;--b1:#9fd0ff;--b2:#d7b4ff;--b3:#a6f0d2;--glass:rgba(255,255,255,.42);--glass2:rgba(255,255,255,.3);--edge:rgba(255,255,255,.75);--sh:0 10px 34px rgba(40,60,110,.16);--tx:#14202b;--mut:#4b5b6a;--inc:#0a8a64;--exp:#d6403a;--sav:#2f6fe0;--opt:#fff;--pri:#0f9d76;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--base:#070b16;--b1:#143a7a;--b2:#3b1d7a;--b3:#0b5a46;--glass:rgba(255,255,255,.09);--glass2:rgba(255,255,255,.06);--edge:rgba(255,255,255,.18);--sh:0 10px 34px rgba(0,0,0,.45);--tx:#eef3fb;--mut:#a5b3c6;--inc:#3be0b0;--exp:#ff8a84;--sav:#7fb0ff;--opt:#1b2233;color-scheme:dark}}
+:root[data-theme="dark"]{--base:#070b16;--b1:#143a7a;--b2:#3b1d7a;--b3:#0b5a46;--glass:rgba(255,255,255,.09);--glass2:rgba(255,255,255,.06);--edge:rgba(255,255,255,.18);--sh:0 10px 34px rgba(0,0,0,.45);--tx:#eef3fb;--mut:#a5b3c6;--inc:#3be0b0;--exp:#ff8a84;--sav:#7fb0ff;--opt:#1b2233;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:110px;min-height:100vh;background:radial-gradient(60% 40% at 12% 8%,var(--b3),transparent 70%),radial-gradient(55% 45% at 92% 22%,var(--b2),transparent 70%),radial-gradient(75% 50% at 35% 100%,var(--b1),transparent 70%),var(--base);background-attachment:fixed}
+.wrap{max-width:520px;margin:0 auto;padding:16px}
+h1{font-size:28px;font-weight:700;letter-spacing:-.5px;margin:4px 4px 14px}
+.hero,.card,nav,.disp,.seg,input,select,.pad button,.btn.sec,.mini{background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(1.7);backdrop-filter:blur(24px) saturate(1.7);border:1px solid var(--edge);box-shadow:var(--sh),inset 0 1px 0 var(--edge)}
+.hero{border-radius:26px;padding:20px;color:#fff;background:linear-gradient(140deg,rgba(15,157,118,.62),rgba(47,111,224,.5));text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.hero small{opacity:.92}.hero b{display:block;font-size:34px;letter-spacing:-.5px;margin:2px 0 12px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.mini{border-radius:16px;padding:10px 12px;font-size:13px;background:rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.mini b{font-size:15px;margin:0}
+.card{border-radius:24px;padding:16px;margin-top:14px}
+.tx{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid var(--edge)}
+.tx:last-child{border:0}.tx small{color:var(--mut);display:block}
+.in{color:var(--inc);font-weight:700}.out{color:var(--exp);font-weight:700}
+input,select,button{font:inherit;color:var(--tx)}
+input,select{width:100%;padding:12px 14px;border-radius:14px;background:var(--glass2);margin-top:6px;outline:none;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+input:focus,select:focus{border-color:var(--pri)}
+option{background:var(--opt);color:var(--tx)}
+label{display:block;margin-top:12px;font-size:13px;color:var(--mut);font-weight:600}
+.btn{background:linear-gradient(135deg,#12b186,#1b8fc2);color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:16px;padding:13px;font-weight:700;width:100%;margin-top:14px;cursor:pointer;box-shadow:0 6px 18px rgba(15,157,118,.35),inset 0 1px 0 rgba(255,255,255,.5);text-shadow:0 1px 2px rgba(0,0,0,.2)}
+.btn.sec{color:var(--tx);text-shadow:none}
+.btn:active,.pad button:active{transform:scale(.97)}
+.seg{display:flex;border-radius:16px;padding:4px}
+.seg button{flex:1;border:0;background:none;padding:10px;border-radius:12px;cursor:pointer;color:var(--mut);font-weight:600}
+.seg button.on{background:rgba(255,255,255,.55);color:#14202b;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+:root:not([data-theme="light"]) .seg button.on{background:rgba(255,255,255,.2);color:var(--tx)}
+.x{background:none;border:0;color:var(--mut);font-size:18px;cursor:pointer;padding:4px 8px}
+.bar{height:12px;background:var(--glass2);border-radius:8px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--edge)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sav),#37d0b0);border-radius:8px}
+nav{position:fixed;left:14px;right:14px;max-width:492px;margin:0 auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));border-radius:30px;display:flex;padding:6px;gap:4px;z-index:5}
+nav button{flex:1;border:0;background:none;padding:8px 2px;font-size:11px;color:var(--mut);cursor:pointer;border-radius:24px;font-weight:600}
+nav button span{display:block;font-size:20px}
+nav button.on{color:var(--tx);background:rgba(255,255,255,.5);box-shadow:0 2px 10px rgba(0,0,0,.12),inset 0 1px 0 var(--edge)}
+:root:not([data-theme="light"]) nav button.on{background:rgba(255,255,255,.16)}
+.disp{text-align:right;border-radius:18px;padding:14px;min-height:80px}
+.disp small{color:var(--mut);display:block;min-height:20px;word-break:break-all}.disp b{font-size:32px;word-break:break-all}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.pad button{padding:16px 0;font-size:20px;border-radius:20px;cursor:pointer;font-weight:600}
+.pad .op{color:var(--pri)}
+.pad .eq{background:linear-gradient(135deg,#12b186,#1b8fc2);color:#fff;border-color:rgba(255,255,255,.45)}
+.empty{color:var(--mut);text-align:center;padding:20px 0}
+.hide{display:none}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.top h1{margin:4px}
+.tg{width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(1.7);backdrop-filter:blur(24px) saturate(1.7);border:1px solid var(--edge);box-shadow:var(--sh),inset 0 1px 0 var(--edge)}
+.tg:active{transform:scale(.93)}
+textarea{width:100%;min-height:70px;padding:12px;border-radius:14px;margin-top:10px;font:12px/1.3 ui-monospace,Menlo,monospace;color:var(--tx);background:var(--glass2);border:1px solid var(--edge);resize:vertical;outline:none}
+.note{display:block;color:var(--mut);font-size:13px;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><h1>💰 MoneyTrack</h1><button class="tg" id="theme" aria-label="Ganti mode gelap atau cerah"></button></div>
+
+  <section id="p-home">
+    <div class="hero"><small>Saldo saat ini</small><b id="saldo">Rp0</b>
+      <div class="row"><div class="mini">Pemasukan<br><b id="sInc">Rp0</b></div><div class="mini">Pengeluaran<br><b id="sExp">Rp0</b></div></div>
+    </div>
+    <div class="card"><label style="margin:0">Bulan</label><input type="month" id="mon">
+      <div id="list"></div></div>
+    <div class="card"><b>Data &amp; aplikasi</b>
+      <small class="note">✅ Data tersimpan otomatis di perangkat ini setiap kali Anda mencatat.</small>
+      <textarea id="code" placeholder="Kode cadangan muncul di sini. Tempel kode untuk memulihkan."></textarea>
+      <div class="row"><button class="btn sec" id="bk">Buat cadangan</button><button class="btn sec" id="rs">Pulihkan</button></div>
+      <small class="note" id="msg"></small>
+      <button class="btn hide" id="inst">📲 Pasang aplikasi</button>
+      <small class="note">Pasang di HP: Android (Chrome) menu ⋮ → Tambahkan ke layar utama. iPhone (Safari) tombol Bagikan → Tambah ke Layar Utama.</small>
+    </div>
+  </section>
+
+  <section id="p-add" class="hide">
+    <div class="card">
+      <div class="seg"><button id="bExp" class="on">Pengeluaran</button><button id="bInc">Pemasukan</button></div>
+      <label>Jumlah (Rp)</label><input id="amt" inputmode="numeric" placeholder="0">
+      <label>Kategori</label><select id="cat"></select>
+      <label>Catatan</label><input id="note" placeholder="Opsional" maxlength="60">
+      <label>Tanggal</label><input type="date" id="dt">
+      <button class="btn" id="save">Simpan</button>
+    </div>
+  </section>
+
+  <section id="p-sav" class="hide">
+    <div class="card"><b>Tabungan baru</b>
+      <label>Nama tujuan</label><input id="gName" placeholder="Misal: Liburan" maxlength="40">
+      <label>Target (Rp)</label><input id="gTgt" inputmode="numeric" placeholder="0">
+      <button class="btn" id="gAdd">Buat tabungan</button></div>
+    <div id="goals"></div>
+  </section>
+
+  <section id="p-calc" class="hide">
+    <div class="card"><div class="disp"><small id="cExp"></small><b id="cRes">0</b></div>
+      <div class="pad" id="pad"></div>
+      <button class="btn sec" id="useCalc">Pakai hasil di form Tambah</button></div>
+  </section>
+</div>
+
+<nav>
+  <button data-p="home" class="on"><span>🏠</span>Beranda</button>
+  <button data-p="add"><span>➕</span>Tambah</button>
+  <button data-p="sav"><span>💳</span>Tabungan</button>
+  <button data-p="calc"><span>🧮</span>Kalkulator</button>
+</nav>
+
+<script>
+(function(){
+var KEY='moneytrack:v1', S={tx:[],goals:[]}, type='exp';
+try{var r=localStorage.getItem(KEY);if(r){var p=JSON.parse(r);if(p&&p.tx&&p.goals)S=p;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+var rp=function(n){return (n<0?'-':'')+'Rp'+Math.abs(n).toLocaleString('id-ID')};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var num=function(s){return parseInt(String(s).replace(/\D/g,''),10)||0};
+var uid=function(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+var CATS={exp:['Makanan','Transportasi','Belanja','Tagihan','Hiburan','Kesehatan','Lainnya'],inc:['Gaji','Bonus','Usaha','Hadiah','Lainnya']};
+
+function fmtInput(el){el.addEventListener('input',function(){var n=num(el.value);el.value=n?n.toLocaleString('id-ID'):''})}
+['amt','gTgt'].forEach(function(i){fmtInput($(i))});
+
+// navigasi
+document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){
+  document.querySelectorAll('nav button').forEach(function(x){x.classList.toggle('on',x===b)});
+  ['home','add','sav','calc'].forEach(function(k){$('p-'+k).classList.toggle('hide',k!==b.dataset.p)});
+  render();window.scrollTo(0,0);
+}});
+
+// form tambah
+function setType(t){type=t;$('bExp').classList.toggle('on',t==='exp');$('bInc').classList.toggle('on',t==='inc');
+  $('cat').innerHTML=CATS[t].map(function(c){return '<option>'+c+'</option>'}).join('')}
+$('bExp').onclick=function(){setType('exp')};$('bInc').onclick=function(){setType('inc')};
+$('dt').value=today();setType('exp');
+$('save').onclick=function(){
+  var a=num($('amt').value);if(!a){$('amt').focus();return}
+  S.tx.push({id:uid(),t:type,a:a,c:$('cat').value,n:$('note').value.trim(),d:$('dt').value||today()});
+  save();$('amt').value='';$('note').value='';
+  document.querySelector('nav [data-p=home]').click();
+};
+
+// beranda
+$('mon').value=today().slice(0,7);$('mon').onchange=render;
+function totalSaved(){return S.goals.reduce(function(s,g){return s+g.s},0)}
+function renderHome(){
+  var all=S.tx.reduce(function(s,x){return s+(x.t==='inc'?x.a:-x.a)},0)-totalSaved();
+  $('saldo').textContent=rp(all);
+  var m=$('mon').value, L=S.tx.filter(function(x){return x.d.slice(0,7)===m}).sort(function(a,b){return b.d.localeCompare(a.d)});
+  var i=0,e=0;L.forEach(function(x){x.t==='inc'?i+=x.a:e+=x.a});
+  $('sInc').textContent=rp(i);$('sExp').textContent=rp(e);
+  $('list').innerHTML=L.length?L.map(function(x){
+    return '<div class="tx"><div><b>'+esc(x.c)+'</b><small>'+esc(x.d)+(x.n?' · '+esc(x.n):'')+'</small></div>'
+    +'<div><span class="'+(x.t==='inc'?'in':'out')+'">'+(x.t==='inc'?'+':'-')+rp(x.a)+'</span><button class="x" data-del="'+x.id+'" aria-label="Hapus">✕</button></div></div>'}).join('')
+    :'<div class="empty">Belum ada transaksi bulan ini.</div>';
+}
+$('list').onclick=function(e){var id=e.target.dataset&&e.target.dataset.del;if(id){S.tx=S.tx.filter(function(x){return x.id!==id});save();render()}};
+
+// tabungan
+$('gAdd').onclick=function(){
+  var n=$('gName').value.trim(),t=num($('gTgt').value);if(!n||!t)return;
+  S.goals.push({id:uid(),n:n,t:t,s:0});save();$('gName').value='';$('gTgt').value='';render();
+};
+function renderGoals(){
+  $('goals').innerHTML=S.goals.length?S.goals.map(function(g){
+    var pc=Math.min(100,Math.round(g.s/g.t*100));
+    return '<div class="card"><div class="tx" style="border:0;padding:0"><b>'+esc(g.n)+'</b><button class="x" data-gdel="'+g.id+'" aria-label="Hapus">✕</button></div>'
+    +'<div class="bar"><i style="width:'+pc+'%"></i></div><small style="color:var(--mut)">'+rp(g.s)+' dari '+rp(g.t)+' ('+pc+'%)</small>'
+    +'<input inputmode="numeric" placeholder="Jumlah (Rp)" data-gin="'+g.id+'">'
+    +'<div class="row"><button class="btn" data-dep="'+g.id+'">Setor</button><button class="btn sec" data-wd="'+g.id+'">Tarik</button></div></div>'}).join('')
+    :'<div class="empty">Belum ada tabungan. Buat tujuan pertamamu!</div>';
+  document.querySelectorAll('[data-gin]').forEach(fmtInput);
+}
+$('goals').onclick=function(e){
+  var d=e.target.dataset||{};
+  if(d.gdel){var g0=S.goals.find(function(x){return x.id===d.gdel});
+    if(g0&&g0.s>0){S.tx.push({id:uid(),t:'inc',a:g0.s,c:'Tabungan',n:'Tabungan dibubarkan: '+g0.n,d:today()})}
+    S.goals=S.goals.filter(function(x){return x.id!==d.gdel});save();render();return}
+  var id=d.dep||d.wd;if(!id)return;
+  var g=S.goals.find(function(x){return x.id===id}),inp=document.querySelector('[data-gin="'+id+'"]'),a=num(inp.value);
+  if(!g||!a)return;
+  if(d.dep){var bal=S.tx.reduce(function(s,x){return s+(x.t==='inc'?x.a:-x.a)},0)-totalSaved();
+    if(a>bal){alert('Saldo tidak cukup untuk menabung sebesar itu.');return}g.s+=a}
+  else g.s=Math.max(0,g.s-a);
+  save();render();
+};
+
+// kalkulator
+var ex='';
+var keys=['C','(',')','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','⌫','='];
+$('pad').innerHTML=keys.map(function(k){var c=/[÷×−+C()]/.test(k)?'op':(k==='='?'eq':'');return '<button class="'+c+(k==='='?' eq':'')+'" data-k="'+k+'">'+k+'</button>'}).join('');
+function calc(s){
+  var j=s.replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-');
+  if(!j||!/^[0-9+\-*/.() ]+$/.test(j))return null;
+  try{var v=Function('"use strict";return ('+j+')')();return isFinite(v)?Math.round(v*1e8)/1e8:null}catch(e){return null}
+}
+function showCalc(){$('cExp').textContent=ex;var v=calc(ex);$('cRes').textContent=v===null?(ex?'…':'0'):v.toLocaleString('id-ID',{maximumFractionDigits:8})}
+$('pad').onclick=function(e){var k=e.target.dataset&&e.target.dataset.k;if(!k)return;
+  if(k==='C')ex='';else if(k==='⌫')ex=ex.slice(0,-1);
+  else if(k==='='){var v=calc(ex);if(v!==null)ex=String(v)}
+  else ex+=k;
+  showCalc()};
+$('useCalc').onclick=function(){var v=calc(ex);if(v===null||v<=0)return;
+  $('amt').value=Math.round(v).toLocaleString('id-ID');document.querySelector('nav [data-p=add]').click()};
+
+// penyimpanan & pemasangan
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+$('bk').onclick=function(){var t=JSON.stringify({app:'moneytrack',v:1,tx:S.tx,goals:S.goals});$('code').value=t;$('code').select();
+  var ok=function(){$('msg').textContent='Kode cadangan dibuat dan disalin. Simpan di catatan atau kirim ke diri sendiri.'},no=function(){$('msg').textContent='Salin kode di atas dan simpan di tempat aman.'};
+  try{navigator.clipboard.writeText(t).then(ok,no)}catch(e){no()}};
+$('rs').onclick=function(){try{var p=JSON.parse($('code').value);if(!p||p.app!=='moneytrack'||!Array.isArray(p.tx)||!Array.isArray(p.goals))throw 0;
+  if(!confirm('Ganti semua data sekarang dengan cadangan ini?'))return;
+  S.tx=p.tx.filter(function(x){return x&&(x.t==='inc'||x.t==='exp')&&+x.a>0}).map(function(x){return {id:String(x.id||uid()),t:x.t,a:Math.round(+x.a),c:String(x.c||'Lainnya'),n:String(x.n||''),d:String(x.d||today())}});
+  S.goals=p.goals.filter(function(g){return g&&+g.t>0}).map(function(g){return {id:String(g.id||uid()),n:String(g.n||'Tabungan'),t:Math.round(+g.t),s:Math.max(0,Math.round(+g.s||0))}});
+  save();render();$('msg').textContent='Data berhasil dipulihkan.'}catch(e){$('msg').textContent='Kode cadangan tidak valid.'}};
+var dp=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('inst').classList.remove('hide')});
+$('inst').onclick=function(){if(dp){dp.prompt();dp=null;$('inst').classList.add('hide')}};
+
+// mode gelap/cerah
+var TK='moneytrack:theme',root=document.documentElement,mode=null;
+try{mode=localStorage.getItem(TK)}catch(e){}
+function isDark(){return mode?mode==='dark':window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches}
+function applyTheme(){root.setAttribute('data-theme',isDark()?'dark':'light');$('theme').textContent=isDark()?'☀️':'🌙'}
+$('theme').onclick=function(){mode=isDark()?'light':'dark';try{localStorage.setItem(TK,mode)}catch(e){}applyTheme()};
+applyTheme();
+
+function render(){renderHome();renderGoals();showCalc()}
+render();
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
